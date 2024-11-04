@@ -1,39 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
-import { Button } from "../../components/ui/button";
-
-const PRODUCTS_PER_PAGE = 4;
+import { useGet } from "@/hooks/useGet";
+import { apiDic } from "@/lib/apiDic";
+import { FullPageLoader } from "./FullPageLoader";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalProducts, setTotalProducts] = useState(0);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await fetch(`/api/products`);
-      const data = await response.json();
-      console.log("products---", data);
-      setProducts(data);
-      setTotalProducts(data.length);
-    };
-
-    fetchProducts();
-  }, [currentPage]);
-
-  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
- 
+  const { data: products, loading } = useGet(apiDic.products);
+  if (loading) {
+    return <FullPageLoader />;
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -42,17 +18,6 @@ export default function ProductsPage() {
         {products?.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
-      </div>
-      <div className="flex justify-between mt-4">
-        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Next
-        </Button>
       </div>
     </div>
   );

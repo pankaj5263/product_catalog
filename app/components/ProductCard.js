@@ -4,7 +4,7 @@ const ProductCard = ({ product }) => {
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader>
-        <CardTitle>{product.name}</CardTitle>
+        <CardTitle>{product.productname}</CardTitle>
         <CardDescription>${product.price}</CardDescription>
       </CardHeader>
       <CardContent>
